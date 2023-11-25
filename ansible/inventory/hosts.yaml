@@ -1,0 +1,28 @@
+---
+kubernetes:
+  children:
+    master:
+      hosts:
+        k8s-control-0:
+          ansible_user: zimmermanc
+          ansible_host: 10.10.1.10
+        k8s-control-1:
+          ansible_user: zimmermanc
+          ansible_host: 10.10.1.11
+        k8s-control-2:
+          ansible_user: zimmermanc
+          ansible_host: 10.10.1.12
+    worker:
+      hosts:
+        k8s-worker-3:
+          ansible_user: zimmermanc
+          ansible_host: 10.10.1.13
+        k8s-worker-4:
+          ansible_user: zimmermanc
+          ansible_host: 10.10.1.14
+        k8s-worker-5:
+          ansible_user: zimmermanc
+          ansible_host: 10.10.1.15
+        k8s-worker-6:
+          ansible_user: zimmermanc
+          ansible_host: 10.10.1.16
