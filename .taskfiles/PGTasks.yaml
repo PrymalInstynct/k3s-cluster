@@ -1,0 +1,55 @@
+---
+version: '3'
+
+tasks:
+  suspend:
+    desc: suspend the apps requiring postgres
+    cmds:
+      - flux suspend helmrelease gatus -n monitoring
+      - flux suspend kustomization cluster-apps-gatus -n flux-system
+      - flux suspend helmrelease prowlarr -n default
+      - flux suspend kustomization cluster-apps-prowlarr -n flux-system
+      - flux suspend helmrelease radarr-hd -n default
+      - flux suspend kustomization cluster-apps-radarr-hd  -n flux-system
+      - flux suspend helmrelease sonarr-hd -n default
+      - flux suspend kustomization cluster-apps-sonarr-hd  -n flux-system
+      - flux suspend helmrelease radarr-uhd -n default
+      - flux suspend kustomization cluster-apps-radarr-uhd  -n flux-system
+      - flux suspend helmrelease sonarr-uhd -n default
+      - flux suspend kustomization cluster-apps-sonarr-uhd  -n flux-system
+
+  down:
+    desc: Scale down the apps requiring postgres
+    cmds:
+      - kubectl scale deployment/gatus --replicas=0 -n monitoring
+      - kubectl scale deployment/prowlarr --replicas=0 -n default
+      - kubectl scale deployment/radarr-hd --replicas=0 -n default
+      - kubectl scale deployment/sonarr-hd --replicas=0 -n default
+      - kubectl scale deployment/radarr-uhd --replicas=0 -n default
+      - kubectl scale deployment/sonarr-uhd --replicas=0 -n default
+
+  up:
+    desc: Scale up the apps requiring postgres
+    cmds:
+      - kubectl scale deployment/gatus --replicas=1 -n monitoring
+      - kubectl scale deployment/prowlarr --replicas=1 -n default
+      - kubectl scale deployment/radarr-hd --replicas=1 -n default
+      - kubectl scale deployment/sonarr-hd --replicas=1 -n default
+      - kubectl scale deployment/radarr-uhd --replicas=1 -n default
+      - kubectl scale deployment/sonarr-uhd --replicas=1 -n default
+
+  resume:
+    desc: Resume the apps requiring postgres
+    cmds:
+      - flux resume kustomization cluster-apps-gatus -n flux-system
+      - flux resume helmrelease gatus -n monitoring
+      - flux resume kustomization cluster-apps-prowlarr -n flux-system
+      - flux resume helmrelease prowlarr -n default
+      - flux resume kustomization cluster-apps-radarr-hd  -n flux-system
+      - flux resume helmrelease radarr-hd -n default
+      - flux resume kustomization cluster-apps-sonarr-hd  -n flux-system
+      - flux resume helmrelease sonarr-hd -n default
+      - flux resume kustomization cluster-apps-radarr-uhd  -n flux-system
+      - flux resume helmrelease radarr-uhd -n default
+      - flux resume kustomization cluster-apps-sonarr-uhd  -n flux-system
+      - flux resume helmrelease sonarr-uhd -n default
