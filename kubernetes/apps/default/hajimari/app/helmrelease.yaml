@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=http://kubernetes-schemas.prymal.info/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -25,20 +26,87 @@ spec:
     keepHistory: false
   values:
     hajimari:
-      title: Apps
+      title: Bookmarks
+      lightTheme: horizon
       darkTheme: espresso
       alwaysTargetBlank: true
       showGreeting: false
       showAppGroups: false
       showAppStatus: false
-      showBookmarkGroups: false
-      showGlobalBookmarks: false
+      showBookmarks: true
+      showBookmarkGroups: true
+      showGlobalBookmarks: true
+      globalBookmarks:
+        - group: Home Lab
+          bookmarks:
+            - name: Unifi Controller
+              url: "https://unifi.prymal.linux/login?redirect=%2F"
+            - name: AdGuard Home - RPI 1
+              url: "http://10.10.1.31"
+            - name: AdGuard Home - RPI 2
+              url: "http://10.10.1.32"
+            - name: NAS
+              url: "http://scorpion.prymal.linux:5000"
+            - name: MinIO
+              url: "http://scorpion.prymal.linux:9001"
+            - name: Web Server
+              url: "http://scorpion.prymal.linux:7777"
+            - name: Cloudflare
+              url: "https://dash.cloudflare.com/login"
+            - name: Print
+              url: "https://print.prymal.linux"
+            - name: Home Assistant
+              url: "https://prymalhome.duckdns.org:8123/lovelace/alarm"
+        - group: Dev
+          bookmarks:
+            - name: GitHub
+              url: "https://github.com/PrymalInstynct?tab=repositories"
+            - name: Material Design Icons
+              url: "https://materialdesignicons.com"
+            - name: Codepen
+              url: "https://codepen.io"
+            - name: Devdocs
+              url: "https://devdocs.io"
+            - name: Devhints
+              url: "https://devhints.io"
+        - group: Google
+          bookmarks:
+            - name: Gmail
+              url: "https://gmail.com"
+            - name: Drive
+              url: "https://drive.google.com"
+        - group: Media
+          bookmarks:
+            - name: Spotify
+              url: "https://open.spotify.com"
+            - name: YouTube
+              url: "https://youtube.com/feed/subscriptions"
+            - name: Netflix
+              url: "https://www.netflix.com"
+            - name: NZBGeek
+              url: "https://nzbgeek.info"
+        - group: Cyber Security
+          bookmarks:
+            - name: The Hacker News
+              url: "https://thehackernews.com/"
+            - name: picoCTF
+              url: "https://picoctf.org/"
+            - name: Detection Lab
+              url: "https://github.com/clong/DetectionLab"
+        - group: Work
+          bookmarks:
+            - name: LMPassage
+              url: "https://lmpassage3.external.lmco.com/"
       showAppUrls: false
       defaultEnable: true
       namespaceSelector:
         matchNames:
           - default
+          - flux-system
+          - kube-system
           - monitoring
+          - networking
+          - rook-ceph
     ingress:
       main:
         enabled: true
@@ -46,7 +114,7 @@ spec:
         annotations:
           hajimari.io/enable: "false"
         hosts:
-          - host: &host "hajimari.${SECRET_DOMAIN}"
+          - host: &host "bookmarks.prymal.info"
             paths:
               - path: /
                 pathType: Prefix
@@ -59,7 +127,3 @@ spec:
       data:
         enabled: true
         type: emptyDir
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128M
