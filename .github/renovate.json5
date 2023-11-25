@@ -8,6 +8,8 @@
     ":semanticCommits",
     ":automergeDigest",
     ":automergeBranch",
+    ":automergePatch",
+    ":automergeMinor",
     "helpers:pinGitHubActionDigests"
   ],
   "dependencyDashboard": true,
