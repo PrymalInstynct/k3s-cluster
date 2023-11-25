@@ -3,11 +3,15 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./namespace.yaml
+  - ./amd-device-plugin/ks.yaml
   - ./cilium/ks.yaml
   - ./coredns/ks.yaml
+  - ./descheduler/ks.yaml
   - ./external-secrets/ks.yaml
+  - ./intel-device-plugin/ks.yaml
   - ./local-path-provisioner/ks.yaml
   - ./metrics-server/ks.yaml
-  - ./reloader/ks.yaml
+  - ./multus-cni/ks.yaml
+  - ./node-feature-discovery/ks.yaml
   - ./snapshot-controller/ks.yaml
   - ./system-upgrade-controller/ks.yaml
