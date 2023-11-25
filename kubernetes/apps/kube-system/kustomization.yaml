@@ -13,5 +13,6 @@ resources:
   - ./metrics-server/ks.yaml
   - ./multus-cni/ks.yaml
   - ./node-feature-discovery/ks.yaml
+  - ./reloader/ks.yaml
   - ./snapshot-controller/ks.yaml
   - ./system-upgrade-controller/ks.yaml
