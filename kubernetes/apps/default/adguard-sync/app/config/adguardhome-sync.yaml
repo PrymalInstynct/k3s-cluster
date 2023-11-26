@@ -1,0 +1,41 @@
+---
+# cron expression to run in daemon mode. (default; "" = runs only once)
+cron: "*/10 * * * *"
+
+# runs the synchronisation on startup
+runOnStart: true
+
+origin:
+  # url of the origin instance
+  url: http://10.10.1.31
+  username: admin
+  password: "${ORIGIN_PASSWORD}"
+
+replica:
+  url: http://10.10.1.32
+  username: admin
+  password: "${REPLICA_PASSWORD}"
+
+# Configure the sync API server, disabled if api port is 0
+api:
+  # Port, default 8080
+  port: 8080
+  # if username and password are defined, basic auth is applied to the sync API
+  username: sync
+  password: "${API_PASSWORD}"
+
+# Configure sync features; by default all features are enabled.
+features:
+  generalSettings: true
+  queryLogConfig: true
+  statsConfig: true
+  clientSettings: true
+  services: true
+  filters: true
+  dhcp:
+    serverConfig: true
+    staticLeases: true
+  dns:
+    serverConfig: true
+    accessLists: true
+    rewrites: true
