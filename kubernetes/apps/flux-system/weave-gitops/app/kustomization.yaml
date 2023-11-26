@@ -5,4 +5,4 @@ namespace: flux-system
 resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
-  # - ../../../../templates/gatus/internal
+  - ../../../../templates/gatus/internal
