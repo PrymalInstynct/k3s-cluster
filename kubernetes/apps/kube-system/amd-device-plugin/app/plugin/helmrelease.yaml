@@ -46,12 +46,6 @@ spec:
             args: ["-logtostderr=true", "-stderrthreshold=INFO", "-v=5"]
             env:
               TZ: America/Denver
-            resources:
-              requests:
-                cpu: 10m
-                memory: 10Mi
-              limits:
-                memory: 100Mi
             securityContext:
               allowPrivilegeEscalation: false
               capabilities:
