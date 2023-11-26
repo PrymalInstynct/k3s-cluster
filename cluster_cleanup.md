@@ -1,6 +1,12 @@
 sudo -i
 
-sed -i '/deb cdrom/d' /etc/apt/sources.list && apt update && apt install -y kitty-terminfo vim curl gdisk parted && echo "zimmermanc ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/zimmermanc
+sed -i '/deb cdrom/d' /etc/apt/sources.list && apt update
+apt -y install kitty-terminfo vim curl gdisk parted initramfs-tools systemd-resolved
+
+# AMD Graphics Only
+apt -y install firmware-amd-graphics libgl1-mesa-dri libglx-mesa0 mesa-vulkan-drivers
+
+echo "zimmermanc ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/zimmermanc
 
 swapoff -a
 vim /etc/fstab
@@ -9,11 +15,11 @@ fdisk /dev/sda
     - d
     - 3
     - w
+vim /etc/initramfs-tools/conf.d/resume
+update-initramfs -u
 
-apt -y install systemd-resolved
 vim /etc/systemd/resolved.conf
     - DNS=10.10.1.31 10.10.1.32
-
 
 rm -rf /var/lib/rook
 DISK="/dev/nvme0n1"
