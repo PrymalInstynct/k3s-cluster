@@ -1,0 +1,67 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.prymal.info/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: unpackerr-hd
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 2.3.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    controllers:
+      main:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          main:
+            image:
+              repository: docker.io/golift/unpackerr
+              tag: 0.12.0
+            env:
+              TZ: America/Denver
+              UN_SONARR_0_URL: http://sonarr-hd.default.svc.cluster.local
+              UN_SONARR_0_PATHS_0: /media/downloads/complete/sonarr-hd
+              UN_RADARR_0_URL: http://radarr-hd.default.svc.cluster.local
+              UN_RADARR_0_PATHS_0: /media/downloads/complete/radarr-hd
+              UN_WEBSERVER_METRICS: true
+              UN_WEBSERVER_LISTEN_ADDR: 0.0.0.0:5656
+            envFrom:
+              - secretRef:
+                  name: unpackerr-hd-secret
+            nodeSelector:
+              amd.feature.node.kubernetes.io/gpu: true
+        pod:
+          SecurityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
+            supplementalGroups: [10000]
+    service:
+      main:
+        ports:
+          http:
+            port: 5656
+    serviceMonitor:
+      main:
+        enabled: true
+    persistence:
+      media:
+        existingClaim: media

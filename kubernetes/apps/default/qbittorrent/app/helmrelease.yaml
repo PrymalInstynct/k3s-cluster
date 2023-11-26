@@ -1,0 +1,136 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.prymal.info/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: qbittorrent
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 2.3.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+  values:
+    controllers:
+      main:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          main:
+            image:
+              repository: ghcr.io/onedr0p/qbittorrent
+              tag: 4.6.1@sha256:796f135bcb572a3fb3138b0c65034535c0a7b1dcb83940fe12e00cad1b47fcbb
+            env:
+              TZ: America/Denver
+              QBITTORRENT__PORT: &port 80
+              QBITTORRENT__BT_PORT: &port-bt 50413
+              QBT_Preferences__WebUI__AlternativeUIEnabled: false
+              QBT_Preferences__WebUI__LocalHostAuth: false
+              QBT_Preferences__WebUI__AuthSubnetWhitelistEnabled: true
+              QBT_Preferences__WebUI__AuthSubnetWhitelist: 10.0.0.0/8
+              QBT_BitTorrent__Session__Interface: eth0
+              QBT_BitTorrent__Session__InterfaceAddress:
+                valueFrom:
+                  fieldRef:
+                    fieldPath: status.podIP
+              QBT_BitTorrent__Session__InterfaceName: eth0
+              QBT_BitTorrent__Session__DefaultSavePath: /media/downloads/complete
+              QBT_BitTorrent__Session__TempPath: /media/downloads/incomplete
+              QBT_BitTorrent__Session__TempPathEnabled: true
+              QBT_BitTorrent__Session__SubcategoriesEnabled: true
+              QBT_BitTorrent__Session__MaxConnections: 500
+              QBT_BitTorrent__Session__MaxConnectionsPerTorrent: 100
+              QBT_BitTorrent__Session__MaxUploads: 5000
+              QBT_BitTorrent__Session__MaxUploadsPerTorrent: 20
+              QBT_BitTorrent__Session__QueueingSystemEnabled: true
+              QBT_BitTorrent__Session__MaxActiveDownloads: 2
+              QBT_BitTorrent__Session__MaxActiveUploads: 500
+              QBT_BitTorrent__Session__MaxActiveTorrents: 502
+              QBT_BitTorrent__Session__GlobalMaxRatio: 5
+              QBT_BitTorrent__Session__GlobalMaxSeedingMinutes: 43200
+              QBT_BitTorrent__Session__GlobalDLSpeedLimit: 10240
+              QBT_BitTorrent__Session__GlobalUPSpeedLimit: 10240
+              QBT_BitTorrent__Session__BandwidthSchedulerEnabled: true
+              QBT_BitTorrent__Session__UseAlternativeGlobalSpeedLimit: true
+              QBT_BitTorrent__Session__AlternativeGlobalDLSpeedLimit: 5120
+              QBT_BitTorrent__Session__AlternativeGlobalUPSpeedLimit: 5120
+              QBT_BitTorrent__Session__DisableAutoTMMByDefault: false
+              QBT_BitTorrent__Session__DisableAutoTMMTriggers__CategorySavePathChanged: false
+              QBT_BitTorrent__Session__DisableAutoTMMTriggers__DefaultSavePathChanged: false
+              QBT_BitTorrent__Session__LSDEnabled: false
+              QBT_BitTorrent__Session__DHTEnabled: false
+              QBT_BitTorrent__Session__PeXEnabled: false
+              QBT_BitTorrent__Scheduler__days: EveryDay
+            nodeSelector:
+              amd.feature.node.kubernetes.io/gpu: true
+            affinity:
+              podAntiAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  - labelSelector:
+                      matchExpressions:
+                        - key: app.kubernetes.io/name
+                          operator: In
+                          values: ["sabnzbd"]
+                    topologyKey: kubernetes.io/hostname
+        pod:
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
+            supplementalGroups: [10000]
+    service:
+      main:
+        ports:
+          http:
+            port: *port
+      bittorrent:
+        controller: main
+        type: LoadBalancer
+        externalTrafficPolicy: Cluster
+        ports:
+          bittorrent:
+            enabled: true
+            port: *port-bt
+            protocol: TCP
+        annotations:
+          io.cilium/lb-ipam-ips: 10.10.1.102
+    ingress:
+      main:
+        enabled: true
+        className: internal
+        annotations:
+          hajimari.io/icon: mdi:download
+        hosts:
+          - host: &host qb.prymal.info
+            paths:
+              - path: /
+                service:
+                  name: main
+                  port: http
+        tls:
+          - hosts:
+              - *host
+    persistence:
+      config:
+        enabled: true
+        existingClaim: qbittorrent-config
+      media:
+        existingClaim: media
