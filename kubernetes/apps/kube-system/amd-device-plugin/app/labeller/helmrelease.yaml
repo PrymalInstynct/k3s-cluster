@@ -4,6 +4,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: amd-gpu-node-labeller
+  namespace: kube-system
 spec:
   interval: 30m
   chart:
@@ -63,6 +64,12 @@ spec:
                 valueFrom:
                   fieldRef:
                     fieldPath: spec.nodeName
+            resources:
+              requests:
+                cpu: 25m
+                memory: 10Mi
+              limits:
+                memory: 100Mi
             securityContext:
               privileged: true
               capabilities:
