@@ -9,4 +9,5 @@ resources:
   - ./discord-template-notifier/ks.yaml
   - ./hajimari/ks.yaml
   - ./overseerr/ks.yaml
+  - ./prowlarr/ks.yaml
   - ./kubernetes-schemas/ks.yaml
