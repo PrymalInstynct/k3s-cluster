@@ -13,7 +13,7 @@ spec:
   dependsOn:
     - name: cloudnative-pg-cluster
     - name: external-secrets-stores
-    - name: cluster-apps-rook-ceph-cluster
+    - name: rook-ceph-cluster
   path: ./kubernetes/apps/default/radarr-hd/app
   prune: true
   sourceRef:
