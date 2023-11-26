@@ -1,0 +1,193 @@
+---
+web:
+  port: ${CUSTOM_WEB_PORT}
+storage:
+  type: postgres
+  path: postgres://${INIT_POSTGRES_USER}:${INIT_POSTGRES_PASS}@${INIT_POSTGRES_HOST}:5432/${INIT_POSTGRES_DBNAME}?sslmode=disable
+  caching: true
+metrics: true
+debug: false
+ui:
+  title: Status | Gatus
+  header: Status
+alerting:
+  discord:
+    webhook-url: ${DISCORD_WEBHOOK_URL}
+    default-alert:
+      enabled: true
+      failure-threshold: 3
+      success-threshold: 2
+      send-on-resolved: true
+connectivity:
+  checker:
+    target: 1.1.1.1:53
+    interval: 1m
+endpoints:
+  - name: synology
+    group: "Infrastructure"
+    url: http://scorpion.prymal.linux:5000/#/signin
+    interval: 1m
+    ui:
+      hide-hostname: true
+      hide-url: true
+    client:
+      dns-resolver: tcp://10.10.1.31:53
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: discord
+  - name: minio
+    group: "Infrastructure"
+    url: http://scorpion.prymal.linux:9001/login
+    interval: 1m
+    ui:
+      hide-hostname: true
+      hide-url: true
+    client:
+      dns-resolver: tcp://10.10.1.31:53
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: discord
+  - name: "adguard01"
+    group: "Infrastructure"
+    url: http://10.10.1.31
+    interval: 1m
+    ui:
+      hide-hostname: true
+      hide-url: true
+    client:
+      dns-resolver: tcp://10.10.1.31:53
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: discord
+  - name: "adguard02"
+    group: "Infrastructure"
+    url: http://10.10.1.32
+    interval: 1m
+    ui:
+      hide-hostname: true
+      hide-url: true
+    client:
+      dns-resolver: tcp://10.10.1.31:53
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: discord
+  - name: k8s-control-0
+    group: "Infrastructure"
+    url: tcp://10.10.1.10:22
+    interval: 1m
+    ui:
+      hide-hostname: true
+      hide-url: true
+    conditions:
+      - "[CONNECTED] == true"
+    alerts:
+      - type: discord
+  - name: k8s-control-1
+    group: "Infrastructure"
+    url: tcp://10.10.1.11:22
+    interval: 1m
+    ui:
+      hide-hostname: true
+      hide-url: true
+    conditions:
+      - "[CONNECTED] == true"
+    alerts:
+      - type: discord
+  - name: k8s-control-2
+    group: "Infrastructure"
+    url: tcp://10.10.1.12:22
+    interval: 1m
+    ui:
+      hide-hostname: true
+      hide-url: true
+    conditions:
+      - "[CONNECTED] == true"
+    alerts:
+      - type: discord
+  - name: k8s-worker-3
+    group: "Infrastructure"
+    url: tcp://10.10.1.13:22
+    interval: 1m
+    ui:
+      hide-hostname: true
+      hide-url: true
+    conditions:
+      - "[CONNECTED] == true"
+    alerts:
+      - type: discord
+  - name: k8s-worker-4
+    group: "Infrastructure"
+    url: tcp://10.10.1.14:22
+    interval: 1m
+    ui:
+      hide-hostname: true
+      hide-url: true
+    conditions:
+      - "[CONNECTED] == true"
+    alerts:
+      - type: discord
+  - name: k8s-worker-5
+    group: "Infrastructure"
+    url: tcp://10.10.1.15:22
+    interval: 1m
+    ui:
+      hide-hostname: true
+      hide-url: true
+    conditions:
+      - "[CONNECTED] == true"
+    alerts:
+      - type: discord
+  - name: k8s-worker-6
+    group: "Infrastructure"
+    url: tcp://10.10.1.16:22
+    interval: 1m
+    ui:
+      hide-hostname: true
+      hide-url: true
+    conditions:
+      - "[CONNECTED] == true"
+    alerts:
+      - type: discord
+  - name: status
+    group: "Web - External"
+    url: https://status.prymal.info
+    interval: 1m
+    ui:
+      hide-hostname: true
+      hide-url: true
+    client:
+      dns-resolver: tcp://1.1.1.1:53
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: discord
+  - name: "home assistant"
+    group: "Web - External"
+    url: https://prymalhome.duckdns.org:8123
+    interval: 1m
+    ui:
+      hide-hostname: true
+      hide-url: true
+    client:
+      dns-resolver: tcp://1.1.1.1:53
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: discord
+  - name: flux-webhook
+    group: "Web - External"
+    url: https://flux-webhook.prymal.info
+    interval: 1m
+    ui:
+      hide-hostname: true
+      hide-url: true
+    client:
+      dns-resolver: tcp://1.1.1.1:53
+    conditions:
+      - "[STATUS] == 404"
+    alerts:
+      - type: discord
