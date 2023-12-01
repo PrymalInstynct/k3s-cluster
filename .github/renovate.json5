@@ -58,6 +58,22 @@
       "ignoreTests": true,
       "matchUpdateTypes": ["minor", "patch", "digest"]
     },
+    {
+      "description": "Auto merge containers",
+      "matchDatasources": ["docker"],
+      "automerge": true,
+      "automergeType": "pr",
+      "ignoreTests": false,
+      "matchUpdateTypes": ["digest", "patch", "minor"]
+    },
+    {
+      "description": "Auto merge Helm Charts",
+      "matchDatasources": ["helm"],
+      "automerge": true,
+      "automergeType": "pr",
+      "ignoreTests": false,
+      "matchUpdateTypes": ["patch", "minor"]
+    },
     // groups
     {
       "description": "Flux Group",
