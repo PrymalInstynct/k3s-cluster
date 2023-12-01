@@ -1,0 +1,82 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.prymal.info/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: terraria
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 2.3.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+  values:
+    controllers:
+      main:
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          main:
+            image:
+              repository: docker.io/ryshe/terraria
+              tag: vanilla-1.4.4.9
+            command: ["mono"]
+            args: ["TerrariaServer.exe", "-config", "/config/serverconfig.txt"]
+            resources:
+              requests:
+                cpu: 500m
+                memory: 256Mi
+              limits:
+                memory: 4Gi
+            nodeSelector:
+              amd.feature.node.kubernetes.io/gpu: true
+    service:
+      main:
+        enabled: false
+      terraria:
+        enabled: true
+        controller: main
+        type: LoadBalancer
+        annotations:
+          io.cilium/lb-ipam-ips: 10.10.1.105
+        ports:
+          terraria:
+            enabled: true
+            port: 7777
+            protocol: TCP
+    persistence:
+      world:
+        enabled: true
+        existingClaim: terraria-world
+        globalMounts:
+          - path: /terraria-server/Worlds
+      config:
+        enabled: true
+        existingClaim: terraria-config
+        globalMounts:
+          - path: /config
+      config-file:
+        type: configMap
+        name: terraria-configmap
+        globalMounts:
+          - path: /config/serverconfig.txt
+            subPath: serverconfig.txt
+            readOnly: true

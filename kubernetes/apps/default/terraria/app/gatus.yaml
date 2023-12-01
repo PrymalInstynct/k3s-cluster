@@ -1,0 +1,25 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: terraria-gatus-ep
+  namespace: default
+  labels:
+    gatus.io/enabled: "true"
+data:
+  config.yaml: |
+    endpoints:
+      - name: terraria
+        group: "Games"
+        url: tcp://10.10.1.105:7777
+        interval: 1m
+        ui:
+          hide-hostname: true
+          hide-url: true
+        conditions:
+          - "[CONNECTED] == true"
+        alerts:
+          - type: discord
+            failure-threshold: 5
+            success-threshold: 2
+            send-on-resolved: true

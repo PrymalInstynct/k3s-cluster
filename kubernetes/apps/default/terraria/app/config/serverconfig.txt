@@ -1,0 +1,7 @@
+worldname=zimzamfam
+worldpath=/terraria-server/Worlds
+world=/terraria-server/Worlds/zimzamfam.wld
+autocreate=2
+difficulty=0
+maxplayers=8
+port=7777
