@@ -21,5 +21,6 @@ resources:
   - ./sabnzbd/ks.yaml
   - ./sonarr-hd/ks.yaml
   - ./sonarr-uhd/ks.yaml
+  - ./terraria/ks.yaml
   - ./unpackerr-hd/ks.yaml
   - ./unpackerr-uhd/ks.yaml
