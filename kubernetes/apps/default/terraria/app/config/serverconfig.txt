@@ -5,3 +5,6 @@ autocreate=2
 difficulty=0
 maxplayers=8
 port=7777
+motd=Please don’t cut the purple trees!
+upnp=0
+priority=1
