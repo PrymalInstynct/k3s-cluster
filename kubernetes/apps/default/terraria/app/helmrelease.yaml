@@ -38,8 +38,8 @@ spec:
             image:
               repository: docker.io/ryshe/terraria
               tag: vanilla-1.4.4.9
-            command: ["mono"]
-            args: ["TerrariaServer.exe", "-config", "/config/serverconfig.txt"]
+            command: ["/terraria-server/TerrariaServer.bin.x86_64"]
+            args: ["-config", "/config/serverconfig.txt"]
             resources:
               requests:
                 cpu: 500m
