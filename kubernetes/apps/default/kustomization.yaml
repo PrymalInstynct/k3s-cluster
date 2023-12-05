@@ -8,19 +8,19 @@ resources:
   - ./adguard-sync/ks.yaml
   - ./discord-template-notifier/ks.yaml
   - ./hajimari/ks.yaml
-  - ./jellyfin/ks.yaml
+  # - ./jellyfin/ks.yaml
   - ./kubernetes-schemas/ks.yaml
-  - ./overseerr/ks.yaml
+  # - ./overseerr/ks.yaml
   - ./plex/ks.yaml
-  - ./prowlarr/ks.yaml
-  - ./qbittorrent/ks.yaml
-  - ./radarr-hd/ks.yaml
-  - ./radarr-uhd/ks.yaml
-  - ./recyclarr-hd/ks.yaml
-  - ./recyclarr-uhd/ks.yaml
-  - ./sabnzbd/ks.yaml
-  - ./sonarr-hd/ks.yaml
-  - ./sonarr-uhd/ks.yaml
+  # - ./prowlarr/ks.yaml
+  # - ./qbittorrent/ks.yaml
+  # - ./radarr-hd/ks.yaml
+  # - ./radarr-uhd/ks.yaml
+  # - ./recyclarr-hd/ks.yaml
+  # - ./recyclarr-uhd/ks.yaml
+  # - ./sabnzbd/ks.yaml
+  # - ./sonarr-hd/ks.yaml
+  # - ./sonarr-uhd/ks.yaml
   # - ./terraria/ks.yaml
-  - ./unpackerr-hd/ks.yaml
-  - ./unpackerr-uhd/ks.yaml
+  # - ./unpackerr-hd/ks.yaml
+  # - ./unpackerr-uhd/ks.yaml
