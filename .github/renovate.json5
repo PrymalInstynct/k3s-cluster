@@ -16,7 +16,7 @@
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
   "suppressNotifications": ["prIgnoreNotification"],
   "rebaseWhen": "conflicted",
-  "schedule": ["on saturday"],
+  "schedule": ["before 3am every weekday"],
   "flux": {
     "fileMatch": [
       "(^|/)addons/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
